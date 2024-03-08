@@ -38,9 +38,30 @@ jobs:
         with:
           github-token: ${{ secrets.MY_PAT }}
           script: |
-            github.rest.issues.addLabels({
-              issue_number: context.issue.number,
+            const { data: labels } = await github.issues.listLabelsForRepo({
               owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: [{ name: 'EB', color: '00eb00' }] 
-            })
+              repo: context.repo.repo
+            });
+      
+            // Check if the label already exists
+            const existingLabel = labels.find(label => label.name === 'EB');
+      
+            // If the label doesn't exist, create it
+            if (!existingLabel) {
+              await github.issues.createLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: 'EB',
+                color: '00eb00' // specify the color here in hexadecimal format
+              });
+            } else {
+              // If the label exists, update its color
+              await github.issues.updateLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                current_name: 'EB',
+                name: 'EB',
+                color: '00eb00' // specify the color here in hexadecimal format
+              });
+            }
+
