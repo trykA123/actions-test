@@ -34,17 +34,27 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
       
-      - name: Add label to repository
+      - name: Create label with color
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.MY_PAT }}
           script: |
-            await github.request('POST /repos/{owner}/{repo}/labels', {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              name: 'testing',
-              description: "testing",
-              color: 'eb0031'
+            const response = await github.graphql(`
+              mutation($input: CreateLabelInput!) {
+                createLabel(input: $input) {
+                  label {
+                    id
+                  }
+                }
+              }
+            `, {
+              input: {
+                repositoryId: "${{ github.repository_id }}",
+                name: "testing",
+                color: "#eb0031",
+                description: "testing"
+              }
             });
+
 
               
