@@ -42,6 +42,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              labels: ['EB'],
-              color: "#00eb00"
+              labels: [{ name: 'EB', color: '00eb00' }] 
             })
