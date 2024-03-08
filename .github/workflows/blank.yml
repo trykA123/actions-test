@@ -34,16 +34,15 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
       
-      - name: Add label to issue
-        uses: actions/github-script@v7
+      - uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.MY_PAT }}
           script: |
-            const octokit = require("@octokit/rest")();
-            const response = await octokit.request('POST /repos/{owner}/{repo}/issues/{issue_number}/labels', {
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: context.issue.number,
               labels: ['EB'],
               color: '00eb00' // Specify the color here
-            });
+            })
+              
